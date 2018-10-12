@@ -1,27 +1,12 @@
-# jassen
+# Klaverjas 
 
 ## TODO
-Hij kan kleurbekennen maar gooit dan wel een random kaart van die kleur op.
-
-* Player.playCard
-    * Introeven
-    * Overtroeven
-        * Of dit in een aparte functie plaatsen
-
-* PEP 8 compatibility
-
-* Welk object doet welke actie?
-    * Delen
-    * Spelen
-    * Puntentelling bijhouden
-    * NAT / gehaald / PIT bepalen
-
-* Use more decorators (function wrappers)
+Hij kan het spel spelen maar gooit nog random kaarten op.
 
 
 ## Design choices
 ### Algemeen
-Normale kleuren worden aangeduid met getallen, sans wordt aangeduid met None
+Normale kleuren worden aangeduid met getallen, sans wordt aangeduid met `None`
 
 ### Trick
 In een slag kunnen de gespeelde kaarten worden opgeslagen in een list met vaste plaatsing (dus Zuid altijd op plaats 0) of relatieve plaatsing (elke speler zet de eerst gespeelde kaart op plek 0).
