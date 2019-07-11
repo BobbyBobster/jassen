@@ -54,7 +54,7 @@ class Deck:
             for j in range(4):
                 for _ in range(i):
                     # players[j].hand.append(self.cards.pop(0))
-                    # players[j].hand.append(self.cards[position])
+                    players[j].hand.append(self.cards[position])
                     print('Player {} gets {}'.format(j, self.cards[position]))
                     position += 1
 
@@ -79,6 +79,7 @@ class Trick:
     def __init__(self):
         pass
 
+
 class Belief:
     """Probability distribution over all players per card.
 
@@ -97,19 +98,8 @@ class Belief:
 
     NOTE: There are actually 2 beliefs, the one about the current state of the game and which player has which card during play. And one about the starting state of the game, this belief also evolves as cards are being played and is a way to backwards deduce why players have bid as they did.
     """
+
     deck = Deck()
-
-
-    def rowsumtester(self, func):
-        def wrapper():
-            func()
-            if (np.sum(self.pmf, axis=2) == 1).all():
-                pass
-            else:
-                raise Exception
-
-        return wrapper
-
 
     def __init__(self, beliefHolder):
         self.beliefHolder = beliefHolder
@@ -118,23 +108,42 @@ class Belief:
     def clearProbabilities(self, card):
         self.pmf[card.suit, card.rank] = [0,0,0,0,0]
 
+    def rowsumTest(self):
+        if (np.sum(self.pmf, axis=2) == 1).all():
+            print("rowsum is fine")
+        else:
+            raise Exception("function changed probabilities such that rowsum != 1")
+
     def resetBelief(self):
         for card in self.deck.cards:
             if card in self.beliefHolder.hand:
                 self.pmf[card.suit, card.rank] = [1,0,0,0,0]
             else:
                 self.pmf[card.suit, card.rank] = [0,1/3,1/3,1/3,0]
-
+        self.rowsumTest()
 
     def normalize(self):
         """Change probability values such that they add up to one but keep their ratio."""
-        pass
+        s = np.sum(self.pmf, axis=2)
+        for card in self.deck.cards:
+            for player in range(5):
+                self.pmf[card.suit, card.rank, player] /= s[card.suit, card.rank]
+        self.rowsumTest()
 
     # TODO: Create tester decorator which checks whether all appropriate row and column sums are 1
-
+    
     # TODO: Create setBelief method to change manually change a probability in pmf
-    def setCardProbabilities(self, card, value):
-        self.pmf[card.suit, card.rank] = value
+    # TODO: Create setCardProbabilities method which takes not a Card object but just rank and suit
+    def setCardProbabilities(self, card=None, values=None, suit=None, rank=None):
+        if card is not None:
+            suit = card.suit
+            rank = card.rank
+        
+        if not isinstance(values, (list, tuple)):
+            raise Exception("values must be a 5-tuple or list with 5 elements")
+
+        self.pmf[suit, rank] = values
+#        self.rowsumTest() 
 
 
 
@@ -149,15 +158,75 @@ if __name__ == "__main__":
 
     b = Belief(p)
     # print(p.belief.pmfs)
-
+    for i in range(4):
+        for j in range(8):
+            b.setCardProbabilities(Card(i,j), (1,2,3,4,5))
+    
+    b.normalize()
    # p.belief.pmfs[Card(1,2)] = [1,2,1]
    # p.belief.normalize()
    # print(p.belief.pmfs)
 
 
+    
 
 
-# for k in range(4):
-    # for j in range(8):
-        # for i in range(4):
-            # pmf[i][j][k] = j + 0.1*k
+
+
+
+
+
+
+
+
+    # TODO: Turn this 3d plotting script into a separate module for testing and debug purposes
+    d.shuffle()
+    p.hand = d.cards[0:8]
+    b.resetBelief()
+
+    import matplotlib.pyplot as plt
+    # This import registers the 3D projection, but is otherwise unused.
+    from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
+
+    # setup the figure and axes
+    fig = plt.figure(figsize=(8, 8))
+    ax0 = fig.add_subplot(221, projection='3d')
+    ax1 = fig.add_subplot(222, projection='3d')
+    ax2 = fig.add_subplot(223, projection='3d')
+    ax3 = fig.add_subplot(224, projection='3d')
+
+    # fake data
+    _x = np.arange(4)
+    _y = np.arange(8)
+    _xx, _yy = np.meshgrid(_x, _y)
+    x, y = _xx.ravel(), _yy.ravel()
+
+
+    def createTop(playerNumber):
+        top = []
+        for rank in range(8):
+            for suit in range(4):
+                top.append(b.pmf[suit, rank, playerNumber])
+        return top
+
+    bottom = np.zeros_like(createTop(1))
+    width = depth = 1
+
+    ax0.set_zlim3d(bottom=0, top=1)
+    ax0.bar3d(x, y, bottom, width, depth, createTop(0))
+    ax0.set_title('Player 0')
+
+    ax1.set_zlim3d(bottom=0, top=1)
+    ax1.bar3d(x, y, bottom, width, depth, createTop(1))
+    ax1.set_title('Player 1')
+
+    ax2.set_zlim3d(bottom=0, top=1)
+    ax2.bar3d(x, y, bottom, width, depth, createTop(2))
+    ax2.set_title('Player 2')
+
+    ax3.set_zlim3d(bottom=0, top=1)
+    ax3.bar3d(x, y, bottom, width, depth, createTop(3))
+    ax3.set_title('Player 3')
+    
+    plt.show()
+   
