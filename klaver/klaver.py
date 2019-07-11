@@ -61,7 +61,7 @@ class Deck:
 
 class Player:
     """Player of the game."""
-    def __init__(self, name=random.choice(['a','b','c','d'])):
+    def __init__(self, name='P'):
         self.name = name
         self.hand = []
         self.belief = Belief(self)
