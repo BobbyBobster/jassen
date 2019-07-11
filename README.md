@@ -1,12 +1,13 @@
 # Klaverjas 
 
 ## TODO
-Hij kan het spel spelen maar gooit nog random kaarten op.
+- Rewrite README to English
+- Split code into modules?
+- 
 
 
 ## Design choices
 ### Algemeen
-Normale kleuren worden aangeduid met getallen, sans wordt aangeduid met `None`
 
 ### Trick
 In een slag kunnen de gespeelde kaarten worden opgeslagen in een list met vaste plaatsing (dus Zuid altijd op plaats 0) of relatieve plaatsing (elke speler zet de eerst gespeelde kaart op plek 0).
