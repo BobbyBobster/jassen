@@ -3,8 +3,8 @@
 ## TODO
 - Rewrite README to English
 - Split code into modules?
-  - Structure project
-
+- Structure project
+  - https://www.kennethreitz.org/essays/repository-structure-and-python
 
 
 ## Design choices
