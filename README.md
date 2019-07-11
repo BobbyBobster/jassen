@@ -3,7 +3,8 @@
 ## TODO
 - Rewrite README to English
 - Split code into modules?
-- 
+  - Structure project
+
 
 
 ## Design choices
