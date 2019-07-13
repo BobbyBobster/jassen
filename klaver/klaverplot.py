@@ -17,6 +17,7 @@ ax1 = fig.add_subplot(222, projection='3d')
 ax2 = fig.add_subplot(223, projection='3d')
 ax3 = fig.add_subplot(224, projection='3d')
 # fake data
+# create grid of all cards (4x8)
 _x = np.arange(4)
 _y = np.arange(8)
 _xx, _yy = np.meshgrid(_x, _y)
