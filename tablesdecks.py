@@ -186,7 +186,7 @@ class Player:
 class Hand:
     """Consists of 8 tricks
     """
-    def __init__(self, players, startPlayPos, trumpSuit, bidMark, bidWinner):
+    def __init__(self, players, startPlayPos, trumpSuit, bidMark=0, bidWinner=0):
         self.players, self.startPlayPos, self.trumpSuit = players, startPlayPos, trumpSuit
         self.bidMark, self.bidWinner = bidMark, bidWinner
         self.wijPoints, self.zijPoints = 0, 0

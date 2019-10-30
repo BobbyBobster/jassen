@@ -1,6 +1,8 @@
 import random
 import numpy as np
 
+import klaverplot as kplot
+
 
 class Card:
     """Standard playing card."""
@@ -49,7 +51,6 @@ class Deck:
         It is up to the caller to order the players list in the correct way.
         """
         position = 0
-
         for i in [3, 2, 3]:
             for j in range(4):
                 for _ in range(i):
@@ -83,20 +84,30 @@ class Trick:
 class Belief:
     """Probability distribution over all players per card.
 
-    Since each card is dealt to some player (including the beliefholder) we can view this as a pmf.
+    Since each card is dealt to some player (including the beliefholder) we can 
+    view this as a pmf.
 
     Members:
         self.beliefHolder : The Player object whose beliefs we model.
-        self.pmf : A 4x8x5 NumPy Array which holds te probability values for cards in the hands of players. Dimensions are suit x rank x player, where player0 is the beliefholder and player4 is the discard pile.
+        self.pmf : A 4x8x5 NumPy Array which holds te probability values for 
+        cards in the hands of players. Dimensions are suit x rank x player, 
+        where player0 is the beliefholder and player4 is the discard pile.
 
 
     Methods:
-        resetBelief : At the start of a new round each player knows the cards in their hands and hence knows the probabilities of those cards. As there is no information about any other cards, those are set to be uniformly distributed.
+        resetBelief : At the start of a new round each player knows the cards 
+        in their hands and hence knows the probabilities of those cards. 
+        As there is no information about any other cards, those are set to be 
+        uniformly distributed.
         normalize :
 
 
 
-    NOTE: There are actually 2 beliefs, the one about the current state of the game and which player has which card during play. And one about the starting state of the game, this belief also evolves as cards are being played and is a way to backwards deduce why players have bid as they did.
+    NOTE: There are actually 2 beliefs, the one about the current state of the 
+    game and which player has which card during play. 
+    And one about the starting state of the game, this belief also evolves as 
+    cards are being played and is a way to backwards deduce why players have 
+    bid as they did.
     """
 
     deck = Deck()
@@ -122,48 +133,63 @@ class Belief:
                 self.pmf[card.suit, card.rank] = [0,1/3,1/3,1/3,0]
         self.rowsumTest()
 
+    # NOTE(bb20191030): I have a feeling this doesnt work as intended
     def normalize(self):
-        """Change probability values such that they add up to one but keep their ratio."""
+        """Change probability values such that they add up to one but keep 
+        their ratio."""
         s = np.sum(self.pmf, axis=2)
         for card in self.deck.cards:
             for player in range(5):
                 self.pmf[card.suit, card.rank, player] /= s[card.suit, card.rank]
         self.rowsumTest()
 
-    # TODO: Create tester decorator which checks whether all appropriate row and column sums are 1
-    
-    # TODO: Create setBelief method to change manually change a probability in pmf
-    # TODO: Create setCardProbabilities method which takes not a Card object but just rank and suit
+    # TODO: Create setBelief method to change manually change a 
+    #       probability in pmf
     def setCardProbabilities(self, card=None, values=None, suit=None, rank=None):
         if card is not None:
             suit = card.suit
             rank = card.rank
-        
+
         if not isinstance(values, (list, tuple)):
             raise Exception("values must be a 5-tuple or list with 5 elements")
 
         self.pmf[suit, rank] = values
-#        self.rowsumTest() 
-
-
+#        self.rowsumTest()
+        
+    def cardPlayed(self, card=None):
+        for idx in range(4):
+            self.setCardProbabilities(card, (0,0,0,0,1))
+        self.normalize()
 
 if __name__ == "__main__":
-
     d = Deck()
     # d.shuffle()
 
-    p = Player()
-    p.hand = d.cards[0:8]
-    # print(p.hand)
-
-    b = Belief(p)
-    # print(p.belief.pmfs)
-    for i in range(4):
-        for j in range(8):
-            b.setCardProbabilities(Card(i,j), (1,2,3,4,5))
+    players = [Player(idx) for idx in range(4)]
     
-    b.normalize()
-   # p.belief.pmfs[Card(1,2)] = [1,2,1]
-   # p.belief.normalize()
-   # print(p.belief.pmfs)
+    position = 0
+    for jdx in range(4):
+        for _ in range(8):
+            players[jdx].hand.append(d.cards[position])
+            print('Player {} gets {}'.format(jdx, d.cards[position]))
+            position += 1
+        
+       
+    
+    for idx in range(4):
+        players[idx].belief.resetBelief()
 
+    for _ in range(15):
+        suit = random.randint(0, 3)
+        rank = random.randint(0, 7)
+        players[0].belief.cardPlayed(Card(suit, rank))
+        print("played ", Card(suit, rank))
+    
+    
+    kplot.beliefPlotter(players[0])
+
+    
+    
+    
+    
+    
