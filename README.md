@@ -5,19 +5,26 @@
 - Split code into modules?
 - Structure project
   - https://www.kennethreitz.org/essays/repository-structure-and-python
+  - Where to put code for calculations?
+  - Move beliefsystem to another module?
+- Implement a way to play against the computer
+- Write a How to play guide
 
+## How to play
+Klaverjas is a trick taking card game in which four players play in two teams against eachother. A game of klaverjas ends when one of the teams scores 1500 points. The game is played in rounds (on average 16 needed to reach 1500 points for one of the teams) in which players are dealt 8 cards from a piket deck of cards (from a standard deck of 52 cards, remove all cards of rank 2 through 6). 
+
+### Dealing
+Cards are dealt from a piket deck of cards. This means there are 32 cards to be dealt. The dealer shuffles the deck and starting from the player to his/her left, deals clockwise. Dealing occurs in 3-2-3 fashion, first each player recieves 3 cards from the deck, then 2 cards, and lastly 3 cards again.
+
+### Bidding
+After the cards are dealt, the bidding round starts. Here players will announce how many points they expect to win this round. The player to the left of the dealer starts the bidding. After this the bidding goes clockwise. 
+# EXPAND ON BIDDING
+
+### Point scoring
+`
 
 ## Design choices
-### Algemeen
-
 ### Trick
-In een slag kunnen de gespeelde kaarten worden opgeslagen in een list met vaste plaatsing (dus Zuid altijd op plaats 0) of relatieve plaatsing (elke speler zet de eerst gespeelde kaart op plek 0).
-
-**Vaste plaatsing** is makkelijker op de manier dat we niet de startpositie van de slag hoeven mee te sturen.
-
-**Relatieve plaatsing** is makkelijker op de manier dat we denken als de speler zelf.
-
 
 ### Beliefs and valuation function
-Elke speler moet constant zijn beliefs aanpassen op wat er is gespeeld en wat voor kaarten elke speler heeft. Een idee om dit te implementeren is om elk `Player` object een lijst te geven met probability distributions van welke kaarten de andere spelers hebben. Dus speler 0 heeft aparte beliefs over de kaarten van spelers 1, 2, en 3.
-Dan kunnen deze beliefs samen met de kaarten van de speler zelf worden gebruikt om een valuation te geven aan welke kaart moet worden gespeeld.
+A Belief is a probability distribution over all players and discard pile per card. 

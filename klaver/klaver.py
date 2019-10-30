@@ -1,6 +1,7 @@
 import random
 import numpy as np
 
+#TODO: Implement a way to be able to play against the computer 
 
 class Card:
     """Standard playing card."""
@@ -66,6 +67,11 @@ class Player:
         self.hand = []
         self.belief = Belief(self)
 
+    def playCard(self, playedCards, trumpSuit):
+        playable = calc.selectPlayable(playedCards, trumpSuit, self.hand)
+        c = random.choice(playable) # Now throws random cards 
+        self.hand.remove(c)
+        return c
 
 class Tree:
     def __init__(self):
@@ -139,12 +145,26 @@ class Belief:
             suit = card.suit
             rank = card.rank
         
-        if not isinstance(values, (list, tuple)):
+        if not isinstance(values, (list, tuple)) or len(values) != 5:
             raise Exception("values must be a 5-tuple or list with 5 elements")
 
         self.pmf[suit, rank] = values
 #        self.rowsumTest() 
 
+    def getCardProbabilities(self, card=None, suit=None, rank=None):
+        if card is not None:
+            return self.pmf[card.suit, card.rank]
+        if suit is not None and rank is not None:
+            return self.pmf[suit, rank]
+
+    def toDiscard(self, card=None):
+        """When a Card is played that Card will go to the discard pile so is not in any Players hand."""
+        self.setCardProbabilities(card=card, values=(0,0,0,0,1))
+    
+    def notFollowed(self, playerIndex=None, suit=None):
+        """When a player doesnt follow suit, this means that they for certain do not have any more cards in that suit."""
+        if suit is not None and playerIndex is not None and isinstance(playerIndex, int):
+            self.pmf[suit,:,playerIndex] = (0,0,0,0,0,0,0,0)
 
 
 if __name__ == "__main__":

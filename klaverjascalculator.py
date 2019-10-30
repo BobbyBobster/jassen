@@ -14,11 +14,11 @@ def debug(func):
     @functools.wraps(func)
     def wrapper_debug(*args, **kwargs):
         args_repr = [repr(a) for a in args]
-        kwargs_repr = [f"{k}={v!r}" for k, v in kwargs.items()]
+        kwargs_repr = ["{k}={v!r}".format() for k, v in kwargs.items()]
         signature = ", ".join(args_repr + kwargs_repr)
-        print(f"Calling {func.__name__}({signature})")
+        print("Calling {func.__name__}({signature})".format())
         value = func(*args, **kwargs)
-        print(f"{func.__name__!r} returned {value!r}")
+        print("{func.__name__!r} returned {value!r}".format())
         return value
     return wrapper_debug
 
