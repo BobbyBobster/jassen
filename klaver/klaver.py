@@ -167,14 +167,19 @@ class Belief:
         if suit is not None and rank is not None:
             return self.pmf[suit, rank]
 
+    # NOTE(bb20191031): Choose between toDiscard method and cardPlayed method
+    #   both are doing the same(?) now
     def toDiscard(self, card=None):
-        """When a Card is played that Card will go to the discard pile so is not in any Players hand."""
-        self.setCardProbabilities(card=card, values=(0,0,0,0,1))
-    
+        """When a Card is played that Card will go to the discard pile so is 
+        not in any Players hand."""
+        self.setCardProbabilities(card, (0,0,0,0,1))
+        
     def notFollowed(self, playerIndex=None, suit=None):
-        """When a player doesnt follow suit, this means that they for certain do not have any more cards in that suit."""
+        """When a player doesnt follow suit, this means that they for certain 
+        do not have any more cards in that suit."""
         if suit is not None and playerIndex is not None and isinstance(playerIndex, int):
             self.pmf[suit,:,playerIndex] = (0,0,0,0,0,0,0,0)
+            self.normalize()
 
 
 if __name__ == "__main__":
@@ -198,9 +203,11 @@ if __name__ == "__main__":
     for _ in range(15):
         suit = random.randint(0, 3)
         rank = random.randint(0, 7)
-        players[0].belief.cardPlayed(Card(suit, rank))
+        players[0].belief.toDiscard(Card(suit, rank))
         print("played ", Card(suit, rank))
     
+    players[0].belief.notFollowed(1,1)
+    players[0].belief.notFollowed(2,1)
     
     kplot.beliefPlotter(players[0])
 

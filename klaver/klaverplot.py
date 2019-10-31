@@ -10,6 +10,34 @@ from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
 #b.resetBelief()
 
 
+def belplttryout(player):
+    # setup the figure and axes
+    beliefFigure = plt.figure(figsize=(8, 8))
+
+    bottom = np.zeros((4,8))   
+    axes = plt.subplots(nrows=2, ncols=2, sharex=True, sharey=True)
+    
+    # create grid of all cards (4x8)
+    _x = np.arange(4)
+    _y = np.arange(8)
+    _xx, _yy = np.meshgrid(_x, _y)
+    x, y = _xx.ravel(), _yy.ravel()
+    
+    def createTop(playerNumber):
+        top = []
+        for rank in range(8):
+            for suit in range(4):
+                top.append(player.belief.pmf[suit, rank, playerNumber])
+        return top
+    
+    for figRow in range(2):
+        for figCol in range(2):
+            axes[figRow][figCol].setzlim3d(bottom=0, top=1)
+            axes[figRow][figCol].bar3d(x, y, top=createTop(0))
+            axes[figRow][figCol].set_title('Player ' + (figRow + figCol))
+
+    
+    
 def beliefPlotter(player):
     # setup the figure and axes
     beliefFigure = plt.figure(figsize=(8, 8))
@@ -35,6 +63,9 @@ def beliefPlotter(player):
     bottom = np.zeros_like(createTop(1))
     width = depth = 1
 
+    plt.xticks(np.arange(4), tuple('s h c d'.split()))
+    plt.yticks(np.arange(8), tuple('7 8 9 J Q K X A'.split()))
+
     ax0.set_zlim3d(bottom=0, top=1)
     ax0.bar3d(x, y, bottom, width, depth, createTop(0))
     ax0.set_title('Player 0')
@@ -51,6 +82,8 @@ def beliefPlotter(player):
     ax3.bar3d(x, y, bottom, width, depth, createTop(3))
     ax3.set_title('Player 3')
 
+
+
     plt.show()
     
     discardFigure = plt.figure(figsize=(4, 4))
@@ -58,5 +91,8 @@ def beliefPlotter(player):
     axis.set_zlim3d(bottom=0, top=1)
     axis.bar3d(x, y, bottom, width, depth, createTop(4))
     axis.set_title('Discard pile')
+
+    plt.xticks(np.arange(4), tuple('s h c d'.split()))
+    plt.yticks(np.arange(8), tuple('7 8 9 J Q K X A'.split()))    
     
     plt.show()
