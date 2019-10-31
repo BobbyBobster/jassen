@@ -14,7 +14,7 @@ def debug(func):
     @functools.wraps(func)
     def wrapper_debug(*args, **kwargs):
         args_repr = [repr(a) for a in args]
-        kwargs_repr = ["{k}={v!r}".format(k,v) for k, v in kwargs.items()]
+        kwargs_repr = ["{k}={v!r}".format() for k, v in kwargs.items()]
         signature = ", ".join(args_repr + kwargs_repr)
         print("Calling {func.__name__}({signature})".format())
         value = func(*args, **kwargs)
