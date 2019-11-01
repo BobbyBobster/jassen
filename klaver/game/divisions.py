@@ -1,10 +1,16 @@
+import klaver.common.deckscards as dc
+import klaver.player.player as pl
+import klaver.calculator.calculator as calc
+
+import random
+
 class Tree:
     """A tree is the main unit of a Klaverjas game,
     it consists of as many hands it takes to get one team to 1500 points (about 16 hands)
     """
-    def __init__(self, names):
-        self.players = [Player(name) for name in names]
-        self.deck = Deck()
+    def __init__(self, players):
+        self.players = players
+        self.deck = dc.Deck()
         self.wijPoints, self.zijPoints = 0, 0
         self.handNum = 0
         self.startPlayPos = 0
@@ -13,7 +19,7 @@ class Tree:
     def newHandSetup(self):
         for player in self.players:
             player.hand.clear()
-        self.deck = Deck()
+        self.deck = dc.Deck()
         self.deck.shuffle()
         self.deck.deal(self.players)
         self.startPlayPos = (self.startPlayPos + 1)%4
@@ -93,11 +99,11 @@ class Hand:
             Amount of tricks won by Zij
         """
         for i in range(4):
-            self.players[i].resetBelief()
+            self.players[i].belief.resetBelief()
 
         # Per trick calculate winners and points and roem
         for trickNum in range(8):
-            print('Slagnummer:', trickNum, '; Beginspeler:', self.players[self.startPlayPos], '(' + str(self.startPlayPos) + ')', '; Biedwinnaar:', self.bidWinner, self.bidMark, '; Troef:', Card.SUITSlongstr[self.trumpSuit])
+            print('Slagnummer:', trickNum, '; Beginspeler:', self.players[self.startPlayPos], '(' + str(self.startPlayPos) + ')', '; Biedwinnaar:', self.bidWinner, self.bidMark, '; Troef:', dc.Card.SUITSlongstr[self.trumpSuit])
             trick = Trick(self.players, self.startPlayPos, self.trumpSuit)
             highCard, posHighCard, points, roem = trick.play()
             self.startPlayPos = posHighCard
@@ -144,7 +150,6 @@ class Trick:
         orderedPlayers = calc.orderPlayers(self.players, self.startingPlayerPosition)
         
         for i in range(4):
-            orderedPlayers[i].valuate(self.cards)
             print(orderedPlayers[i].name, *orderedPlayers[i].hand)
             c = orderedPlayers[i].playCard(self.cards, self.trumpSuit)
             self.cards.append(c)

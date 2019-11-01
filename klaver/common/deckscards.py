@@ -1,3 +1,5 @@
+import random
+
 class Card:
     """Standard playing card."""
     SUITS = (0,1,2,3)
@@ -18,8 +20,9 @@ class Card:
         return 'Card({},{})'.format(self.suit, self.rank)
 
     def __str__(self):
-        return '{} of {}'.format(self.RANKSlongstr[self.rank], 
-                self.SUITSlongstr[self.suit]))
+        return '({}, {})'.format(self.rank, self.suit)
+#        return '{} of {}'.format(self.RANKSlongstr[self.rank], 
+#                self.SUITSlongstr[self.suit])
 
     def __hash__(self):
         return hash((self.suit, self.rank))

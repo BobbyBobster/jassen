@@ -5,10 +5,6 @@ from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
 
 
 # TODO: Turn this 3d plotting script into a separate module for testing and debug purposes
-#d.shuffle()
-#p.hand = d.cards[0:8]
-#b.resetBelief()
-
 
 def belplttryout(player):
     # setup the figure and axes
@@ -82,10 +78,9 @@ def beliefPlotter(player):
     ax3.bar3d(x, y, bottom, width, depth, createTop(3))
     ax3.set_title('Player 3')
 
-
-
     plt.show()
     
+
     discardFigure = plt.figure(figsize=(4, 4))
     axis = discardFigure.add_subplot(111, projection='3d')
     axis.set_zlim3d(bottom=0, top=1)

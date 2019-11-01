@@ -1,3 +1,7 @@
+import klaver.common.deckscards as dc
+
+import numpy as np
+
 class Belief:
     """Probability distribution over all players per card.
 
@@ -27,7 +31,7 @@ class Belief:
     bid as they did.
     """
 
-    deck = Deck()
+    deck = dc.Deck()
 
     def __init__(self, beliefHolder):
         self.beliefHolder = beliefHolder

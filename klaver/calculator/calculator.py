@@ -10,7 +10,6 @@ ROEMRANKS = (0,1,2,4,5,6,3,7)
 POINTS = (0,0,0,2,3,4,10,11)
 TRUMPPOINTS = (0,0,14,20,3,4,10,11)
 
-
 def orderPlayers(players=[], startingPlayerPosition=None):
     """Needs a better name
     Returns the list of players with Player at startingPlayerPosition on index 0
@@ -35,7 +34,8 @@ def selectPlayable(playedCards=[], trumpSuit=None, hand=[]):
         playedTrumps = list(filter(lambda card: card.suit == trumpSuit, playedCards))
         if playedTrumps:
             highestPlayedTrump = max(playedTrumps, key=lambda card: card.rank)
-            higherTrumps = list(filter(lambda card: card.trumpRank > highestPlayedTrump.trumpRank, cardsInTrump))
+            #higherTrumps = list(filter(lambda card: card.trumpRank > highestPlayedTrump.trumpRank, cardsInTrump))
+            higherTrumps = list(filter(lambda card: TRUMPRANKS[card.rank] > TRUMPRANKS[highestPlayedTrump.rank], cardsInTrump))
 
             if higherTrumps:
                 # We need to trump-over
@@ -59,7 +59,8 @@ def selectPlayable(playedCards=[], trumpSuit=None, hand=[]):
         cardsInTrump = list(filter(lambda card: card.suit == trumpSuit, hand))
         try:
             highestPlayedTrump = max(playedTrumps, key=lambda card: card.rank)
-            higherTrumps = list(filter(lambda card: card.trumpRank > highestPlayedTrump.trumpRank, cardsInTrump))
+            #higherTrumps = list(filter(lambda card: card.trumpRank > highestPlayedTrump.trumpRank, cardsInTrump))
+            higherTrumps = list(filter(lambda card: TRUMPRANKS[card.rank] > TRUMPRANKS[highestPlayedTrump.rank], cardsInTrump))
             return higherTrumps
         except ValueError:
             return cardsInTrump
@@ -93,7 +94,8 @@ def highestCard(cards, trumpSuit=None):
     cardsInTrump = list(filter(lambda card: card.suit == trumpSuit, cards))
 
     if cardsInTrump:
-        highTrump = max(cardsInTrump, key=lambda card: card.trumpRank)
+        #highTrump = max(cardsInTrump, key=lambda card: card.trumpRank)
+        highTrump = max(cardsInTrump, key=lambda card: TRUMPRANKS[card.rank])
         return highTrump
     else:
         cardsInStartSuit = list(filter(lambda card: card.suit == cards[0].suit, cards))
@@ -112,7 +114,8 @@ def countPoints(cards, trumpSuit=None):
     """
     points = 0
     for card in cards:
-        points += card.points if card.suit != trumpSuit else card.trumpPoints
+        #points += card.points if card.suit != trumpSuit else card.trumpPoints
+        points += POINTS[card.rank] if card.suit != trumpSuit else TRUMPPOINTS[card.rank]
     return points
 
 
@@ -145,7 +148,8 @@ def countRoem(cards, trumpSuit=None):
             cards.sort(key=lambda c: c.rank)
             subtractList = []
             for i in range(len(cards) - 1):
-                subtract = abs(cards[i].roemRank - cards[i+1].roemRank)
+                #subtract = abs(cards[i].roemRank - cards[i+1].roemRank)
+                subtract = abs(ROEMRANKS[cards[i].rank] - ROEMRANKS[cards[i].rank])
                 subtractList.append(subtract)
 
             # If more than 1 difference equals 1, we know at least 3 cards have consecutive ranks
