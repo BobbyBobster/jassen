@@ -1,27 +1,14 @@
-
-# coding: utf-8
-
 """Klaverjas calculator
 
-This module is used to calculate different aspects of the Klaverjas card game by the same author. These include point totals, finding a highest card, and roem calculations.
-This module only expects to recieve inputs from the Klaverjas card game. As such it will freely use attributes of for example the Card class as defined there.
+This module is used to calculate different aspects of the Klaverjas card game. 
+These include point totals, finding a highest card, and roem calculations.
 """
 
-import functools
+TRUMPRANKS = (0,1,6,7,2,3,4,5)
+ROEMRANKS = (0,1,2,4,5,6,3,7)
 
-def debug(func):
-    """Print the function signature and return value"""
-    @functools.wraps(func)
-    def wrapper_debug(*args, **kwargs):
-        args_repr = [repr(a) for a in args]
-        kwargs_repr = ["{k}={v!r}".format() for k, v in kwargs.items()]
-        signature = ", ".join(args_repr + kwargs_repr)
-        print("Calling {func.__name__}({signature})".format())
-        value = func(*args, **kwargs)
-        print("{func.__name__!r} returned {value!r}".format())
-        return value
-    return wrapper_debug
-
+POINTS = (0,0,0,2,3,4,10,11)
+TRUMPPOINTS = (0,0,14,20,3,4,10,11)
 
 
 def orderPlayers(players=[], startingPlayerPosition=None):
