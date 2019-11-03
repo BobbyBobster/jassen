@@ -1,6 +1,10 @@
 # Klaverjas 
 
 ## TODO
+- Why not let TrumpCard be subclass of Card so we can implement data model
+methods (dunder methods)
+  - This would mean we need Deck class to just be a container of Cards (or TrumpCards)
+  - rank and suit should remain the same only interactions between cards should differ
 - Rewrite README to English
 - Split code into modules?
 - Structure project
