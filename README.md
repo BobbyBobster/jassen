@@ -5,12 +5,9 @@
 methods (dunder methods)
   - This would mean we need Deck class to just be a container of Cards (or TrumpCards)
   - rank and suit should remain the same only interactions between cards should differ
+- Is there a place for generators?
+  - Perhaps in the calculator?
 - Rewrite README to English
-- Split code into modules?
-- Structure project
-  - https://www.kennethreitz.org/essays/repository-structure-and-python
-  - Where to put code for calculations?
-  - Move beliefsystem to another module?
 - Implement a way to play against the computer
 - Write a How to play guide
 
