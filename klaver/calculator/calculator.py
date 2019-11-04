@@ -24,25 +24,29 @@ def orderPlayers(players=[], startingPlayerPosition=None):
 def selectPlayable(playedCards=[], trumpSuit=None, hand=[]):
     
     def selectPlayableTrump():
-        cardsInTrump = list(filter(lambda card: card.suit == trumpSuit, hand))
+        #cardsInTrump = list(filter(lambda card: card.suit == trumpSuit, hand))
+        cardsInTrump = [card for card in hand if card.suit == trumpSuit]
         
         if not cardsInTrump:
             # No cards in trump suit hence play a card
             # Also works for sans trump
             return None
         
-        playedTrumps = list(filter(lambda card: card.suit == trumpSuit, playedCards))
+        #playedTrumps = list(filter(lambda card: card.suit == trumpSuit, playedCards))
+        playedTrumps = [card for card in playedCards if card.suit == trumpSuit]
         if playedTrumps:
             highestPlayedTrump = max(playedTrumps, key=lambda card: card.rank)
             #higherTrumps = list(filter(lambda card: card.trumpRank > highestPlayedTrump.trumpRank, cardsInTrump))
-            higherTrumps = list(filter(lambda card: TRUMPRANKS[card.rank] > TRUMPRANKS[highestPlayedTrump.rank], cardsInTrump))
+            #higherTrumps = list(filter(lambda card: TRUMPRANKS[card.rank] > TRUMPRANKS[highestPlayedTrump.rank], cardsInTrump))
+            higherTrumps = [card for card in cardsInTrump if TRUMPRANKS[card.rank] > TRUMPRANKS[highestPlayedTrump.rank]]
 
             if higherTrumps:
                 # We need to trump-over
                 return higherTrumps
         
             # Cannot trump-over, check if we can play a non-trump otherwise trump-under
-            nonTrumps = list(filter(lambda card: card not in cardsInTrump, hand))
+            #nonTrumps = list(filter(lambda card: card not in cardsInTrump, hand))
+            nonTrumps = [card for card in hand if card not in cardsInTrump]
             return nonTrumps if nonTrumps else cardsInTrump
         else:
             # playedTrumps empty
@@ -50,7 +54,8 @@ def selectPlayable(playedCards=[], trumpSuit=None, hand=[]):
         if selectTrumpOver():
             return selectTrumpOver()
         else:
-            nonTrumps = list(filter(lambda card: card not in cardsInTrump, hand))
+            #nonTrumps = list(filter(lambda card: card not in cardsInTrump, hand))
+            nonTrumps = [card for card in hand if card not in cardsInTrump]
             return nonTrumps if nonTrumps else cardsInTrump
 
     
