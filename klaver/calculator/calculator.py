@@ -60,12 +60,15 @@ def selectPlayable(playedCards=[], trumpSuit=None, hand=[]):
 
     
     def selectTrumpOver():
-        playedTrumps = list(filter(lambda card: card.suit == trumpSuit, playedCards))
-        cardsInTrump = list(filter(lambda card: card.suit == trumpSuit, hand))
+        #playedTrumps = list(filter(lambda card: card.suit == trumpSuit, playedCards))
+        #cardsInTrump = list(filter(lambda card: card.suit == trumpSuit, hand))
+        playedTrumps = [card for card in playedCards if card.suit == trumpSuit]
+        cardsInTrump = [card for card in hand if card.suit == trumpSuit]
         try:
             highestPlayedTrump = max(playedTrumps, key=lambda card: card.rank)
             #higherTrumps = list(filter(lambda card: card.trumpRank > highestPlayedTrump.trumpRank, cardsInTrump))
-            higherTrumps = list(filter(lambda card: TRUMPRANKS[card.rank] > TRUMPRANKS[highestPlayedTrump.rank], cardsInTrump))
+            #higherTrumps = list(filter(lambda card: TRUMPRANKS[card.rank] > TRUMPRANKS[highestPlayedTrump.rank], cardsInTrump))
+            higherTrumps = [card for card in cardsInTrump if TRUMPRANKS[card.rank] > TRUMPRANKS[highestPlayedTrump.rank]]
             return higherTrumps
         except ValueError:
             return cardsInTrump
@@ -77,7 +80,8 @@ def selectPlayable(playedCards=[], trumpSuit=None, hand=[]):
         return hand
     
     startSuit = playedCards[0].suit
-    cardsInSuit = list(filter(lambda card: card.suit == startSuit, hand))
+    #cardsInSuit = list(filter(lambda card: card.suit == startSuit, hand))
+    cardsInSuit = [card for card in hand if card.suit == startSuit]
     
     if startSuit == trumpSuit and selectTrumpOver():
         return selectTrumpOver()
@@ -96,14 +100,16 @@ def selectPlayable(playedCards=[], trumpSuit=None, hand=[]):
 def highestCard(cards, trumpSuit=None):
     """Returns the highest Card object
     """
-    cardsInTrump = list(filter(lambda card: card.suit == trumpSuit, cards))
+    #cardsInTrump = list(filter(lambda card: card.suit == trumpSuit, cards))
+    cardsInTrump = [card for card in cards if card.suit == trumpSuit]
 
     if cardsInTrump:
         #highTrump = max(cardsInTrump, key=lambda card: card.trumpRank)
         highTrump = max(cardsInTrump, key=lambda card: TRUMPRANKS[card.rank])
         return highTrump
     else:
-        cardsInStartSuit = list(filter(lambda card: card.suit == cards[0].suit, cards))
+        #cardsInStartSuit = list(filter(lambda card: card.suit == cards[0].suit, cards))
+        cardsInStartSuit = [card for card in cards if card.suit == cards[0].suit]
         highCard = max(cardsInStartSuit, key=lambda card: card.rank)
         return highCard
 
@@ -137,15 +143,18 @@ def countRoem(cards, trumpSuit=None):
     # Stuk
     # Without a trumpSuit, stuk is impossible
     if trumpSuit is not None:
-        trumpKing = list(filter(lambda c: c.suit == trumpSuit and c.rank == 4, cards))
-        trumpQueen = list(filter(lambda c: c.suit == trumpSuit and c.rank == 5, cards))
+        #trumpKing = list(filter(lambda c: c.suit == trumpSuit and c.rank == 4, cards))
+        #trumpQueen = list(filter(lambda c: c.suit == trumpSuit and c.rank == 5, cards))
+        trumpKing = [card for card in cards if card.suit == trumpSuit and card.rank == 4]
+        trumpQueen = [card for card in cards if card.suit == trumpSuit and card.rank == 5]
         if trumpKing and trumpQueen:
             roem += 20
 
     # Normal roem
     # For each suit we check whether there are 3 cards in that suit, if so there is chance for roem
     for i in range(4):
-        cardsInSuit = list(filter(lambda c: c.suit == i, cards))
+        #cardsInSuit = list(filter(lambda c: c.suit == i, cards))
+        cardsInSuit = [card for card in cards if card.suit == i]
         if len(cardsInSuit) >= 3:
             cards = cardsInSuit
 
@@ -158,7 +167,8 @@ def countRoem(cards, trumpSuit=None):
                 subtractList.append(subtract)
 
             # If more than 1 difference equals 1, we know at least 3 cards have consecutive ranks
-            lenOfOnes = len(list(filter(lambda x: x == 1, subtractList)))
+            #lenOfOnes = len(list(filter(lambda x: x == 1, subtractList)))
+            lenOfOnes = len([x for x in subtractList if x == 1])
             if lenOfOnes == 2:
                 roem += 20
             elif lenOfOnes == 3:
