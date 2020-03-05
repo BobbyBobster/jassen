@@ -20,7 +20,7 @@ class Card:
         return 'Card({},{})'.format(self.suit, self.rank)
 
     def __str__(self):
-        return '({}, {})'.format(self.rank, self.suit)
+        return '({}, {})'.format(self.suit, self.rank)
 #        return '{} of {}'.format(self.RANKSlongstr[self.rank], 
 #                self.SUITSlongstr[self.suit])
 
