@@ -19,7 +19,7 @@ Cards are dealt from a piket deck of cards. This means there are 32 cards to be 
 
 ### Bidding
 After the cards are dealt, the bidding round starts. Here players will announce how many points they expect to win this round. The player to the left of the dealer starts the bidding. After this the bidding goes clockwise. 
-# EXPAND ON BIDDING
+... EXPAND ON BIDDING
 
 ### Point scoring
 `
